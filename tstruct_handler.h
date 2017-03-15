@@ -112,7 +112,7 @@ void print_ ## name(struct name *tstruct, int pad) {	\
 #define __field(type, name) __field_fmt(name, "%x")
 
 #undef l_field
-#define l_field(type, name) __field_fmt(name, "%lx");
+#define l_field(type, name) __field_fmt(name, "%llx");
 
 #undef r_field
 #define r_field(type, name) \
