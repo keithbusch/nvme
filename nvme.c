@@ -25,7 +25,12 @@
 
 static int nvme_get_dev(int argc, char **argv)
 {
-	return open("/dev/nvme0", O_RDONLY);
+	if (optind + 1 >= argc) {
+		errno = EINVAL;
+		perror(argv[0]);
+		return -EINVAL;
+	}
+	return open(argv[optind + 1], O_RDONLY);
 }
 
 #define CREATE_CMD
