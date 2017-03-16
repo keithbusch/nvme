@@ -4,7 +4,7 @@
  * Define the structure and prototype
  */
 #undef TSTRUCT
-#define TSTRUCT(name, entries) \
+#define TSTRUCT(name, desc, entries) \
 struct name {	\
 	entries	\
 };		\
@@ -72,7 +72,7 @@ extern void print_ ## name(struct name *tstruct, int pad);
  * Note: The compiler squashes the size.
  */
 #undef TSTRUCT
-#define TSTRUCT(name, entries)	\
+#define TSTRUCT(name, desc, entries)	\
 static int name ## _pad(int pad)\
 {				\
 	entries			\
@@ -132,14 +132,19 @@ static int name ## _pad(int pad)\
  * Print the structure
  */
 #undef TSTRUCT
-#define TSTRUCT(name, entries) \
-static void __print_ ## name(struct name *tstruct, int pad, char **c) {	\
+#define TSTRUCT(name, _desc, entries) \
+static void __print_ ## name(struct name *tstruct, int pad, char **c) \
+{							\
 	int i; 						\
+	const char *desc = _desc;			\
 	pad = name ## _pad(pad);			\
 	(void)i;					\
+	if (desc)					\
+		printf("%s:\n", desc);			\
 	entries						\
 }							\
-void print_ ## name(struct name *tstruct, int pad) {	\
+void print_ ## name(struct name *tstruct, int pad) 	\
+{							\
 	__print_ ## name(tstruct, pad, NULL);		\
 }
 
@@ -147,7 +152,7 @@ void print_ ## name(struct name *tstruct, int pad) {	\
 #define TSTRUCT_entries(args...) args
 
 #define __field_fmt(name, fmt) \
-	printf("%*s : "fmt"\n", pad, __stringify(name), tstruct->name);
+	printf("%-*s : "fmt"\n", pad, __stringify(name), tstruct->name);
 
 #undef __field
 #define __field(type, name) __field_fmt(name, "%x")
@@ -170,20 +175,20 @@ void print_ ## name(struct name *tstruct, int pad) {	\
 
 #undef __array
 #define __array(type, name, elems) 			\
-	printf("%*s :\n", pad, __stringify(name));	\
+	printf("%-*s :\n", pad, __stringify(name));	\
 	for (i = 0; i < elems; i++) 			\
-		printf("%*s[%3d] : %lx\n", pad - 5, 	\
+		printf("%-*s[%3d] : %lx\n", pad - 5, 	\
 			__stringify(name), i, 		\
 			(uint64_t)tstruct->name[i]);
 
 #undef c_array
 #define c_array(type, name, elems) \
-	printf("%*s : %-.*s\n", pad, __stringify(name),	\
+	printf("%-*s : %-.*s\n", pad, __stringify(name),	\
 		elems, tstruct->name);
 
 #undef s_array
 #define s_array(type, name, elems) 				\
-	printf("%*s : ", pad, __stringify(name));		\
+	printf("%-*s : ", pad, __stringify(name));		\
 	for (i = 0; i < elems; i++) 				\
 		printf("%lx", (uint64_t)tstruct->name[i]);	\
 	printf("\n");
@@ -196,9 +201,9 @@ void print_ ## name(struct name *tstruct, int pad) {	\
 
 #undef __array_struct
 #define __array_struct(type, name, elems, field_cap)			\
-	printf("%*s :\n", pad, __stringify(name));			\
+	printf("%-*s :\n", pad, __stringify(name));			\
 	for (i = 0; i < tstruct->field_cap; i++) {			\
-		printf("%*s[%3d] :\n", pad - 5, __stringify(name), i);	\
+		printf("%-*s[%3d] :\n", pad - 5, __stringify(name), i);	\
 		print_ ## type(&tstruct->name[i], pad);			\
 	}
 
@@ -208,7 +213,7 @@ void print_ ## name(struct name *tstruct, int pad) {	\
 		int start;						\
 		char buf[1024];						\
 		char *c = buf;						\
-		start = printf("%*s[%3d] :", pad - 5, __stringify(name), i);	\
+		start = printf("%-*s[%3d] :", pad - 5, __stringify(name), i);	\
 		__print_ ## type(&tstruct->name[i], 0, &c);		\
 		c += sprintf(c, "\n");					\
 		print_word_wrapped(buf, pad + 3, start);		\

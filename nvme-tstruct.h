@@ -7,7 +7,7 @@
 #include "nvme.h"
 #include "tstruct.h"
 
-TSTRUCT(nvme_id_power_state,
+TSTRUCT(nvme_id_power_state, NULL,
 	TSTRUCT_entries(
 		_sfield(__le16, mp)
 		rsfield(__u8, rsvd2)
@@ -26,7 +26,7 @@ TSTRUCT(nvme_id_power_state,
 		r_array(__u8, rsvd23, 9)
 	)
 )
-TSTRUCT(nvme_id_ctrl,
+TSTRUCT(nvme_id_ctrl, "NVMe Identify Controller",
 	TSTRUCT_entries(
 		__field(__le16, vid)
 		__field(__le16, ssvid)
@@ -93,12 +93,12 @@ TSTRUCT(nvme_id_ctrl,
 	)
 )
 
-TSTRUCT(nvme_lbaf,
+TSTRUCT(nvme_lbaf, NULL,
 	__field(__le16, ms)
 	__field(__u8, ds)
 	__field(__u8, rp)
 )
-TSTRUCT(nvme_id_ns,
+TSTRUCT(nvme_id_ns, "NVMe Identify Namespace",
 	TSTRUCT_entries(
 		l_field(__le64, nsze)
 		l_field(__le64, ncap)
@@ -130,7 +130,7 @@ TSTRUCT(nvme_id_ns,
 	)
 )
 
-TSTRUCT(nvme_smart_log,
+TSTRUCT(nvme_smart_log, "NVMe Smart Log",
 	TSTRUCT_entries(
 		__field(__u8, critical_warning)
 		s_array(__u8, temperature, 2)
@@ -155,7 +155,7 @@ TSTRUCT(nvme_smart_log,
 	)
 )
 
-TSTRUCT(nvme_error_log,
+TSTRUCT(nvme_error_log, "NVMe Error Log",
 	TSTRUCT_entries(
 		l_field(__le64, error_count)
 		__field(__le16, sqid)
@@ -169,7 +169,7 @@ TSTRUCT(nvme_error_log,
 	)
 )
 
-TSTRUCT(nvme_firmware_log,
+TSTRUCT(nvme_firmware_log, "NVMe Firmware Log",
 	TSTRUCT_entries(
 		__field(__u8, afi)
 		r_array(__u8, resv, 7)
@@ -178,13 +178,13 @@ TSTRUCT(nvme_firmware_log,
 	)
 )
 
-TSTRUCT(nvme_ns_list,
+TSTRUCT(nvme_ns_list, "NVMe Namespace List",
 	TSTRUCT_entries(
 		__array(__le32, ns_id, 1024)
 	)
 )
 
-TSTRUCT(nvme_lba_range_type,
+TSTRUCT(nvme_lba_range_type, "NVMe LBA Range",
 	TSTRUCT_entries(
 		__field(__u8, type)
 		__field(__u8, attributes)
@@ -196,7 +196,7 @@ TSTRUCT(nvme_lba_range_type,
 	)
 )
 
-TSTRUCT(nvme_registered_ctrl,
+TSTRUCT(nvme_registered_ctrl, NULL,
 	TSTRUCT_entries(
 		__field(__le16, cntlid)
 		__field(__u8, rcsts)
@@ -206,7 +206,7 @@ TSTRUCT(nvme_registered_ctrl,
 	)
 )
 
-TSTRUCT(nvme_reservation_status,
+TSTRUCT(nvme_reservation_status, "NVMe Reservation Status",
 	TSTRUCT_entries(
 		__field(__le32, gen)
 		__field(__u8, rtype)
@@ -218,7 +218,7 @@ TSTRUCT(nvme_reservation_status,
 	)
 )
 
-TSTRUCT(nvme_dsm_range,
+TSTRUCT(nvme_dsm_range, "NVMe DSM Range",
 	TSTRUCT_entries(
 		__field(__le32, cattr)
 		__field(__le32, nlb)
@@ -226,7 +226,7 @@ TSTRUCT(nvme_dsm_range,
 	)
 )
 
-TSTRUCT(nvme_host_mem_buffer,
+TSTRUCT(nvme_host_mem_buffer, "NVMe Host Memory Buffer",
 	TSTRUCT_entries(
 		__field(__u32, hsize)
 		__field(__u32, hmdlal)
@@ -236,14 +236,14 @@ TSTRUCT(nvme_host_mem_buffer,
 	)
 )
 
-TSTRUCT(nvme_auto_pst,
+TSTRUCT(nvme_auto_pst, "NVMe Autonomous Power State Transition",
 	TSTRUCT_entries(
 		__field(__u32, data)
 		__field(__u32, rsvd32)
 	)
 )
 
-TSTRUCT(nvme_controller_list,
+TSTRUCT(nvme_controller_list, "NVMe Controller List",
 	TSTRUCT_entries(
 		__field(__le16, num)
 		__array(__le16, identifier, 2047)
@@ -251,7 +251,7 @@ TSTRUCT(nvme_controller_list,
 )
 
 /* Discovery log page entry */
-TSTRUCT(nvmf_disc_rsp_page_entry,
+TSTRUCT(nvmf_disc_rsp_page_entry, NULL,
 	TSTRUCT_entries(
 		__field(__u8, trtype)
 		__field(__u8, adrfam)
@@ -270,7 +270,7 @@ TSTRUCT(nvmf_disc_rsp_page_entry,
 )
 
 /* Discovery log page header */
-TSTRUCT(nvmf_disc_rsp_page_hdr,
+TSTRUCT(nvmf_disc_rsp_page_hdr, "NVMe Discovery Log Page",
 	TSTRUCT_entries(
 		l_field(__le64, genctr)
 		l_field(__le64, numrec)
@@ -280,7 +280,7 @@ TSTRUCT(nvmf_disc_rsp_page_hdr,
 	)
 )
 
-TSTRUCT(nvmf_connect_data,
+TSTRUCT(nvmf_connect_data, NULL,
 	TSTRUCT_entries(
 		s_array(__u8, hostid, 16)
 		__field(__le16, cntlid)
