@@ -5,6 +5,8 @@
 #include <getopt.h>
 #include <stdbool.h>
 
+extern int print_word_wrapped(const char *s, int indent, int start);
+
 enum flags_masks {
 	F_VERBOSE_MASK		= 0xf,
 	F_VENDOR_SPEC_SHIFT 	= 4,

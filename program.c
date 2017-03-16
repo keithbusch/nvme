@@ -6,7 +6,7 @@
 
 #include "program.h"
 
-static int print_word_wrapped(const char *s, int indent, int start)
+int print_word_wrapped(const char *s, int indent, int start)
 {
 	const int width = 80;
 	const char *c, *t;
@@ -14,7 +14,7 @@ static int print_word_wrapped(const char *s, int indent, int start)
 	int last_line = indent;
 
 	while (start < indent) {
-		putc(' ', stderr);
+		printf(" ");
 		start++;
 	}
 
@@ -28,14 +28,14 @@ static int print_word_wrapped(const char *s, int indent, int start)
 					(last_line - indent + width)) {
 				int i;
 				last_line = (int) (c-s) + start;
-				putc('\n', stderr);
+				printf("\n");
 				for (i = 0; i < indent; i++)
-					putc(' ', stderr);
+					printf(" ");
 				start = indent;
 				continue;
 			}
 		}
-		putc(*c, stderr);
+		printf("%c", *c);
 	}
 	return (int) (c - s) + start - last_line + indent;
 }
