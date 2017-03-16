@@ -5,13 +5,20 @@
 #include <getopt.h>
 #include <stdbool.h>
 
-enum flags {
-	VERBOSE_1	= 1,
-	VERBOSE_2	= 2,
-	VERBOSE_3	= 3,
-	VERBOSE_MASK	= 0x3,
+enum flags_masks {
+	F_VERBOSE_MASK		= 0xf,
+	F_VENDOR_SPEC_SHIFT 	= 4,
+	F_RESERVED_FIELDS_SHIFT = 5,
+};
 
-	VENDOR_SPEC	= 4,
+enum flags {
+	F_TERSE			= 0,
+	F_NORMAL		= 1,
+	F_VERBOSE		= 2,
+	F_DETAILED		= 3,
+
+	F_VENDOR_SPEC		= 1 << F_VENDOR_SPEC_SHIFT,
+	F_RESERVED_FIELDS	= 1 << F_RESERVED_FIELDS_SHIFT,
 };
 
 typedef uint8_t U8;

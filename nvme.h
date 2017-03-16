@@ -194,15 +194,6 @@ enum {
 	NVME_AER_NOTICE_NS_CHANGED	= 0x0002,
 };
 
-struct nvme_lba_range_type {
-	__u8			type;
-	__u8			attributes;
-	__u8			rsvd2[14];
-	__u64			slba;
-	__u64			nlb;
-	__u8			guid[16];
-	__u8			rsvd48[16];
-};
 
 enum {
 	NVME_LBART_TYPE_FS	= 0x01,
@@ -212,22 +203,6 @@ enum {
 
 	NVME_LBART_ATTRIB_TEMP	= 1 << 0,
 	NVME_LBART_ATTRIB_HIDE	= 1 << 1,
-};
-
-struct nvme_reservation_status {
-	__le32	gen;
-	__u8	rtype;
-	__u8	regctl[2];
-	__u8	resv5[2];
-	__u8	ptpls;
-	__u8	resv10[13];
-	struct {
-		__le16	cntlid;
-		__u8	rcsts;
-		__u8	resv3[5];
-		__le64	hostid;
-		__le64	rkey;
-	} regctl_ds[];
 };
 
 enum nvme_async_event_type {
@@ -282,12 +257,6 @@ enum {
 	NVME_DSMGMT_AD		= 1 << 2,
 };
 
-struct nvme_dsm_range {
-	__le32			cattr;
-	__le32			nlb;
-	__le64			slba;
-};
-
 /* idle and active power scales occupy the last 2 bits of the field */
 #define POWER_SCALE(s) ((s) >> 6)
 
@@ -299,33 +268,6 @@ enum {
 	NVME_ID_CNS_NS_PRESENT		= 0x11,
 	NVME_ID_CNS_CTRL_NS_LIST	= 0x12,
 	NVME_ID_CNS_CTRL_LIST		= 0x13,
-};
-
-struct nvme_host_mem_buffer {
-	__u32			hsize;
-	__u32			hmdlal;
-	__u32			hmdlau;
-	__u32			hmdlec;
-	__u8			rsvd16[4080];
-};
-
-struct nvme_auto_pst {
-	__u32	data;
-	__u32	rsvd32;
-};
-
-struct nvme_controller_list {
-	__le16 num;
-	__le16 identifier[];
-};
-
-struct nvme_bar_cap {
-	__u16	mqes;
-	__u8	ams_cqr;
-	__u8	to;
-	__u16	css_nssrs_dstrd;
-	__u8	mpsmax_mpsmin;
-	__u8	reserved;
 };
 
 #ifdef __CHECKER__
@@ -430,51 +372,6 @@ enum nvmf_capsule_command {
 
 #define MAX_DISC_LOGS	255
 
-/* Discovery log page entry */
-struct nvmf_disc_rsp_page_entry {
-	__u8		trtype;
-	__u8		adrfam;
-	__u8		subtype;
-	__u8		treq;
-	__le16		portid;
-	__le16		cntlid;
-	__le16		asqsz;
-	__u8		resv8[22];
-	char		trsvcid[NVMF_TRSVCID_SIZE];
-	__u8		resv64[192];
-	char		subnqn[NVMF_NQN_FIELD_LEN];
-	char		traddr[NVMF_TRADDR_SIZE];
-	union tsas {
-		char		common[NVMF_TSAS_SIZE];
-		struct rdma {
-			__u8	qptype;
-			__u8	prtype;
-			__u8	cms;
-			__u8	resv3[5];
-			__u16	pkey;
-			__u8	resv10[246];
-		} rdma;
-	} tsas;
-};
-
-/* Discovery log page header */
-struct nvmf_disc_rsp_page_hdr {
-	__le64		genctr;
-	__le64		numrec;
-	__le16		recfmt;
-	__u8		resv14[1006];
-	struct nvmf_disc_rsp_page_entry entries[0];
-};
-
-struct nvmf_connect_data {
-	__u8		hostid[16];
-	__le16		cntlid;
-	char		resv4[238];
-	char		subsysnqn[NVMF_NQN_FIELD_LEN];
-	char		hostnqn[NVMF_NQN_FIELD_LEN];
-	char		resv5[256];
-};
-
 enum {
 	/*
 	 * Generic Command Status:
@@ -570,21 +467,6 @@ enum {
 	NVME_SC_UNWRITTEN_BLOCK		= 0x287,
 
 	NVME_SC_DNR			= 0x4000,
-};
-
-struct nvme_completion {
-	/*
-	 * Used by Admin and Fabrics commands to return data:
-	 */
-	union {
-		__le16	result16;
-		__le32	result;
-		__le64	result64;
-	};
-	__le16	sq_head;	/* how much of this queue may be reclaimed */
-	__le16	sq_id;		/* submission queue that generated this entry */
-	__u16	command_id;	/* of the command which completed */
-	__le16	status;		/* did the command fail, and if so, why? */
 };
 
 #define NVME_VS(major, minor) (((major) << 16) | ((minor) << 8))

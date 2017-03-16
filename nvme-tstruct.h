@@ -4,6 +4,7 @@
 #if !defined(NVME_TSTRUCT) || defined(TSTRUCT_HEADER_MULTI_READ)
 #define NVME_TSTRUCT
 
+#include "nvme.h"
 #include "tstruct.h"
 
 TSTRUCT(nvme_id_power_state,
@@ -111,7 +112,7 @@ TSTRUCT(nvme_id_ns,
 		__field(__u8, nmic)
 		__field(__u8, rescap)
 		__field(__u8, fpi)
-		__field(__u8, rsvd33)
+		r_field(__u8, rsvd33)
 		__field(__le16, nawun)
 		__field(__le16, nawupf)
 		__field(__le16, nacwu)
@@ -120,7 +121,7 @@ TSTRUCT(nvme_id_ns,
 		__field(__le16, nabspf)
 		r_field(__le16, rsvd46)
 		__array(__u8, nvmcap, 16)
-		__array(__u8, rsvd64, 40)
+		r_array(__u8, rsvd64, 40)
 		__array(__u8, nguid, 16)
 		__array(__u8, eui64, 8)
 		__array_struct(nvme_lbaf, lbaf, 16, nlbaf + 1)
@@ -150,7 +151,7 @@ TSTRUCT(nvme_smart_log,
 		__field(__le32, warning_temp_time)
 		__field(__le32, critical_comp_time)
 		__array(__le16, temp_sensor, 8)
-		r_array(__u8,rsvd216, 296)
+		r_array(__u8, rsvd216, 296)
 	)
 )
 
@@ -180,6 +181,113 @@ TSTRUCT(nvme_firmware_log,
 TSTRUCT(nvme_ns_list,
 	TSTRUCT_entries(
 		__array(__le32, ns_id, 1024)
+	)
+)
+
+TSTRUCT(nvme_lba_range_type,
+	TSTRUCT_entries(
+		__field(__u8, type)
+		__field(__u8, attributes)
+		r_array(__u8, rsvd2, 14)
+		l_field(__u64, slba)
+		l_field(__u64, nlb)
+		__array(__u8, guid, 16)
+		r_array(__u8, rsvd48, 16)
+	)
+)
+
+TSTRUCT(nvme_registered_ctrl,
+	TSTRUCT_entries(
+		__field(__le16, cntlid)
+		__field(__u8, rcsts)
+		r_array(__u8, rsvd3, 5)
+		l_field(__le64, hostid)
+		l_field(__le64, rkey)
+	)
+)
+
+TSTRUCT(nvme_reservation_status,
+	TSTRUCT_entries(
+		__field(__le32, gen)
+		__field(__u8, rtype)
+		__array(__u8, regctl, 2)
+		r_array(__u8, rsvd5, 2)
+		__field(__u8, ptpls)
+		r_array(__u8, rsvd10, 13)
+		__array_struct(nvme_registered_ctrl, regctl_ds, 256, regctl[0])
+	)
+)
+
+TSTRUCT(nvme_dsm_range,
+	TSTRUCT_entries(
+		__field(__le32, cattr)
+		__field(__le32, nlb)
+		l_field(__le64, slba)
+	)
+)
+
+TSTRUCT(nvme_host_mem_buffer,
+	TSTRUCT_entries(
+		__field(__u32, hsize)
+		__field(__u32, hmdlal)
+		__field(__u32, hmdlau)
+		__field(__u32, hmdlec)
+		r_array(__u8, rsvd16, 4080)
+	)
+)
+
+TSTRUCT(nvme_auto_pst,
+	TSTRUCT_entries(
+		__field(__u32, data)
+		__field(__u32, rsvd32)
+	)
+)
+
+TSTRUCT(nvme_controller_list,
+	TSTRUCT_entries(
+		__field(__le16, num)
+		__array(__le16, identifier, 2047)
+	)
+)
+
+/* Discovery log page entry */
+TSTRUCT(nvmf_disc_rsp_page_entry,
+	TSTRUCT_entries(
+		__field(__u8, trtype)
+		__field(__u8, adrfam)
+		__field(__u8, subtype)
+		__field(__u8, treq)
+		__field(__le16, portid)
+		__field(__le16, cntlid)
+		__field(__le16, asqsz)
+		r_array(__u8, resv8, 22)
+		__array(char, trsvcid, NVMF_TRSVCID_SIZE)
+		r_array(__u8, resv64, 192)
+		__array(char, subnqn, NVMF_NQN_FIELD_LEN)
+		__array(char, traddr, NVMF_TRADDR_SIZE)
+		__array(char, common, NVMF_TSAS_SIZE)
+	)
+)
+
+/* Discovery log page header */
+TSTRUCT(nvmf_disc_rsp_page_hdr,
+	TSTRUCT_entries(
+		l_field(__le64, genctr)
+		l_field(__le64, numrec)
+		__field(__le16, recfmt)
+		__array(__u8, resv14, 1006)
+		__array_struct(nvmf_disc_rsp_page_entry, entries, 0, numrec)
+	)
+)
+
+TSTRUCT(nvmf_connect_data,
+	TSTRUCT_entries(
+		__array(__u8, hostid, 16)
+		__field(__le16, cntlid)
+		r_array(char, resv4, 238)
+		__array(char, subsysnqn, NVMF_NQN_FIELD_LEN)
+		__array(char, hostnqn, NVMF_NQN_FIELD_LEN)
+		r_array(char, resv5, 256)
 	)
 )
 

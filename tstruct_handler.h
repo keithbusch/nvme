@@ -74,7 +74,7 @@ static int name ## _pad(int pad)\
 
 #undef __array
 #define __array(type, name, elems) \
-	pad = max(pad, sizeof(__stringify(name)));
+	pad = max(pad, sizeof(__stringify(name)) + 5);
 
 #undef r_array
 #define r_array(type, name, elems)

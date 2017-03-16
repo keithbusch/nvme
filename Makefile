@@ -7,7 +7,7 @@ default: $(NVME)
 
 OBJS := program.o json.o nvme-models.o nvme-print.o os/linux-nvme.o
 
-nvme: nvme.c nvme.h cmd_handler.h $(OBJS)
+nvme: nvme.c nvme.h cmd_handler.h tstruct_handler.h $(OBJS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) nvme.c -o $(NVME) $(OBJS)
 
 %.o: %.c %.h nvme.h nvme-cli.h nvme-tstruct.h
